@@ -1,7 +1,4 @@
-import { SignInButton } from "@clerk/nextjs";
-// import Image from "next/image";
-// import preview from "@/public/preview.png";
-// import previewMobile from "@/public/preview-mobile.jpg";
+import { SignUpButton } from "@clerk/nextjs";
 
 function LandingPage() {
   return (
@@ -15,7 +12,7 @@ function LandingPage() {
           effortlessly and track your spending in real-time. Start making
           informed financial decisions with ease and confidence.
         </p>
-        <SignInButton>
+        <SignUpButton>
           <button className="group btn btn-primary text-base-100">
             Get Started Now{" "}
             <span>
@@ -34,7 +31,7 @@ function LandingPage() {
               </svg>
             </span>
           </button>
-        </SignInButton>
+        </SignUpButton>
       </div>
     </div>
   );

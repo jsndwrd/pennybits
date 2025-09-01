@@ -12,7 +12,7 @@ function Navbar() {
   const pathname = usePathname();
 
   return (
-    <div className="navbar fixed top-0 z-50 w-full items-center border-b border-b-base-300 bg-base-100">
+    <div className="navbar fixed top-0 z-50 w-full items-center border-b border-b-base-300 bg-white">
       <div className="navbar-start">
         <SignedIn>
           <div className="dropdown">
@@ -27,7 +27,7 @@ function Navbar() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6"
+                className="size-6 stroke-black"
               >
                 <path
                   strokeLinecap="round"

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ITransaction } from "../../lib/interface";
 
 interface CashflowProps {
@@ -12,13 +12,16 @@ export default function Cashflow({ transact }: CashflowProps) {
   const [balance, setBalance] = useState(0);
   const [categoryFlow, setCategoryFlow] = useState<number[]>([]);
 
-  const categoryName = [
-    "Consumption",
-    "Education",
-    "Personal",
-    "Transportation",
-    "Utilities",
-  ];
+  const categoryName = useMemo(
+    () => [
+      "Consumption",
+      "Education",
+      "Personal",
+      "Transportation",
+      "Utilities",
+    ],
+    [],
+  );
 
   useEffect(() => {
     const countCashflow = async () => {
@@ -72,7 +75,7 @@ export default function Cashflow({ transact }: CashflowProps) {
   return (
     <div>
       <div className="h-full gap-4 md:flex">
-        <div className="flex flex-col gap-4 *:border">
+        <div className="flex flex-col gap-4 *:border-b *:shadow-sm *:transition-all hover:*:shadow-md">
           <div className="stats">
             <div className="stat">
               <div className="stat-figure text-blue-600">
@@ -142,7 +145,7 @@ export default function Cashflow({ transact }: CashflowProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-1 flex-col rounded-2xl border px-6 py-4 *:flex-1 max-md:mt-4">
+        <div className="flex flex-1 flex-col rounded-2xl border-b px-6 py-4 shadow-sm transition-all *:flex-1 hover:shadow-md max-md:mt-4">
           <h2 className="text-xl font-semibold">Expenses Category</h2>
           {categoryName.map((e, i) => (
             <div key={i} className="flex items-center gap-2">

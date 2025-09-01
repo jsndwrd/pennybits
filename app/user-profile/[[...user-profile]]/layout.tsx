@@ -7,7 +7,9 @@ export default function UserProfileLayout({
 }>) {
   return (
     <Layout>
-      <div className="py-2 flex justify-center items-center">{children}</div>
+      <div className="flex items-center justify-center pb-2 pt-24">
+        {children}
+      </div>
     </Layout>
   );
 }

@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 
-const TransactionSchema = mongoose.Schema(
+const TransactionSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+      index: true, // Add index for better query performance
+    },
     date: {
       type: Date,
       default: new Date(Date.now()).toISOString().split("T")[0],

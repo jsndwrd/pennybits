@@ -14,6 +14,8 @@ function TransactionTable({
   fetchData,
 }: TransactionTableProps) {
   const [visible, setVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [date, setDate] = useState(
     new Date(Date.now()).toISOString().split("T")[0],
@@ -29,22 +31,48 @@ function TransactionTable({
     setAmount(0);
     setCategory("Consumption");
     setDescription(" ");
+    setError(null);
   };
 
   const addTransaction = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_CONNECTION_URL}/api/transactions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        date: date,
-        type: type,
-        amount: amount,
-        category: category,
-        description: description,
-      }),
-    });
-    resetTransacts();
-    fetchData();
+    if (amount <= 0) {
+      setError("Amount must be greater than 0");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CONNECTION_URL}/api/transactions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: date,
+            type: type,
+            amount: amount,
+            category: category,
+            description: description,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to add transaction");
+      }
+
+      resetTransacts();
+      fetchData();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to add transaction",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // For table-filtering
@@ -107,6 +135,27 @@ function TransactionTable({
           </button>
         </div>
       </h2>
+
+      {/* Error Display */}
+      {error && (
+        <div className="alert alert-error mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{error}</span>
+        </div>
+      )}
+
       <div className="h-[30rem] overflow-x-auto">
         <table className="table table-pin-rows">
           <thead>
@@ -189,21 +238,26 @@ function TransactionTable({
                   onClick={() => {
                     addTransaction();
                   }}
+                  disabled={isSubmitting}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
+                  {isSubmitting ? (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  )}
                 </button>
               </th>
             </tr>

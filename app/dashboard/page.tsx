@@ -6,15 +6,24 @@ import { ITransaction } from "../../lib/interface";
 import { fetchTransactions } from "../../lib/transaction";
 
 export default function Page() {
-  const date = new Date(Date.now()).toDateString().split(" ");
-  const dateText = `${date[0]}, ${date.slice(1).join(" ")}`;
-
   const [transact, setTransact] = useState<ITransaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch transactions
   const fetchData = async () => {
-    const data = await fetchTransactions();
-    setTransact(data);
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchTransactions();
+      setTransact(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch transactions",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -22,21 +31,69 @@ export default function Page() {
   }, []);
 
   const deleteTransaction = async (id: string) => {
-    await fetch(
-      `${process.env.NEXT_PUBLIC_CONNECTION_URL}/api/transactions/${id}`,
-      {
-        method: "DELETE",
-      },
-    );
-    fetchData();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CONNECTION_URL}/api/transactions/${id}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete transaction");
+      }
+
+      fetchData();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to delete transaction",
+      );
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="alert alert-error max-w-md">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <div>
+            <h3 className="font-bold">Error!</h3>
+            <div className="text-xs">{error}</div>
+            <button
+              className="btn btn-outline btn-sm mt-2"
+              onClick={() => fetchData()}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 p-4">
-      <div className="flex items-center justify-between">
-        <h1 className="rounded-md text-3xl font-medium">Dashboard</h1>
-        <p>{dateText}</p>
-      </div>
       <div>
         <Cashflow transact={transact} />
       </div>
