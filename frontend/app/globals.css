@@ -1,0 +1,97 @@
+@config "../tailwind.config.mjs";
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Light theme (off-white background, blue accent) */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Single-hue palette (blue) with varying lightness */
+    --chart-1: 217 91% 60%;
+    --chart-2: 217 84% 56%;
+    --chart-3: 217 76% 52%;
+    --chart-4: 217 68% 48%;
+    --chart-5: 217 60% 44%;
+    --chart-6: 217 52% 40%;
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 45% 58%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 222 34% 16%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 34% 16%;
+    --muted-foreground: 215 20% 70%;
+
+    --accent: 222 34% 18%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 222 34% 18%;
+    --input: 222 34% 18%;
+    --ring: 210 45% 58%;
+
+    /* Single-hue palette (blue) with varying lightness */
+    --chart-1: 210 42% 64%;
+    --chart-2: 210 40% 58%;
+    --chart-3: 210 38% 52%;
+    --chart-4: 210 36% 46%;
+    --chart-5: 210 34% 40%;
+    --chart-6: 210 32% 34%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+.cl-avatarBox {
+  width: 2.5rem;
+  height: 2.5rem;
+}
